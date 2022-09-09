@@ -3,6 +3,9 @@
 
 #include <cassert>
 #include <cmath>
+#include <iostream>
+
+const Vec2D Vec2D::Zero;
 
 //------------------------------
 // Constructor
@@ -16,6 +19,12 @@ Vec2D::Vec2D()
 Vec2D::Vec2D(float x, float y)
     : x{x}, y{y}
 {
+}
+
+Vec2D::Vec2D(const Vec2D &src)
+    : x{src.x}, y{src.y}
+{
+    std::cout << "Copy Constructor" << std::endl;
 }
 
 //------------------------------
@@ -61,13 +70,43 @@ void Vec2D::set_y(float input_y)
 // Class Methods
 //------------------------------
 
-float Vec2D::mag2() const
+float Vec2D::Mag2() const
 {
-    return x * x + y + y;
+    return x * x + y * y;
 }
-float Vec2D::mag() const
+float Vec2D::Mag() const
 {
-    return sqrt(mag2());
+    return sqrt(Mag2());
+}
+
+Vec2D Vec2D::get_unit_vec() const
+{
+
+    float mag = Mag();
+
+    if (mag > EPSILON)
+    {
+        return *this / mag;
+    }
+
+    return Vec2D::Zero;
+}
+
+Vec2D &Vec2D::normalize()
+{
+    float mag = Mag();
+
+    if (mag > EPSILON)
+    {
+        *this /= mag;
+    }
+
+    return *this;
+}
+
+float Vec2D::Distance(const Vec2D &vec) const
+{
+    return (vec - *this).Mag();
 }
 
 //------------------------------

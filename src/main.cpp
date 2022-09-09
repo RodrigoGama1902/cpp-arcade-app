@@ -4,9 +4,10 @@
 int main()
 {
 
-    Vec2D vec1(1, 4);
-    Vec2D vec2(2, -2);
+    Vec2D vec1{7, 4};
+    Vec2D vec2(vec1);
 
-    std::cout << vec1 + vec2 << std::endl;
-    std::cout << vec1 - vec2 << std::endl;
+    Vec2D normalized(vec1.get_unit_vec());
+
+    std::cout << normalized.Mag() << std::endl;
 }
