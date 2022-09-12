@@ -72,7 +72,7 @@ void Vec2D::set_y(float input_y)
 
 float Vec2D::Mag2() const
 {
-    return x * x + y * y;
+    return Dot(*this);
 }
 float Vec2D::Mag() const
 {
@@ -176,4 +176,66 @@ Vec2D &Vec2D::operator-=(const Vec2D &vec2)
 {
     *this = *this - vec2;
     return *this;
+}
+
+float Vec2D::Dot(const Vec2D &vec) const
+{
+    return x * vec.x + y * vec.y;
+}
+
+Vec2D Vec2D::ProjectOnto(const Vec2D &vec2) const
+{
+
+    Vec2D unitVec2 = vec2.get_unit_vec();
+
+    float dot = Dot(unitVec2);
+
+    return unitVec2 * dot;
+}
+
+float Vec2D::AngleBetween(const Vec2D &vec2) const
+{
+
+    return acosf(get_unit_vec().Dot(vec2.get_unit_vec()));
+}
+
+Vec2D Vec2D::Reflect(const Vec2D &normal) const
+{
+
+    return *this - 2 * ProjectOnto(normal);
+}
+
+void Vec2D::Rotate(float angle, const Vec2D &aroundPoint)
+{
+
+    float cosine = cosf(angle);
+    float sine = sinf(angle);
+
+    Vec2D thisVec(x, y);
+
+    thisVec -= aroundPoint;
+
+    float xRot = thisVec.x * cosine - thisVec.y * sine;
+    float yRot = thisVec.x * sine + thisVec.y * cosine;
+
+    Vec2D rot = Vec2D(xRot, yRot);
+
+    *this = rot + aroundPoint;
+}
+Vec2D Vec2D::RotationResult(float angle, const Vec2D &aroundPoint) const
+{
+
+    float cosine = cosf(angle);
+    float sine = sin(angle);
+
+    Vec2D thisVec(x, y);
+
+    thisVec -= aroundPoint;
+
+    float xRot = thisVec.x * cosine - thisVec.y * sine;
+    float yRot = thisVec.x * sine + thisVec.y * cosine;
+
+    Vec2D rot = Vec2D(xRot, yRot);
+
+    return rot + aroundPoint;
 }
