@@ -27,6 +27,7 @@ public:
 
     inline bool operator==(const Color &other) const { return mColor == other.mColor; }
     inline bool operator!=(const Color &other) const { return mColor != other.mColor; }
+
     inline uint32_t GetPixelColor() const { return mColor; }
 
     void SetRGBA(uint8_t r, uint8_t g, uint8_t b, uint8_t a);

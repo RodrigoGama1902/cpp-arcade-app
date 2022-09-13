@@ -29,6 +29,7 @@ void Color::SetRed(uint8_t red)
     SDL_GetRGBA(mColor, mFormat, &r, &g, &b, &a);
     SetRGBA(red, g, b, a);
 }
+
 void Color::SetGreen(uint8_t green)
 {
     uint8_t r;
@@ -39,6 +40,7 @@ void Color::SetGreen(uint8_t green)
     SDL_GetRGBA(mColor, mFormat, &r, &g, &b, &a);
     SetRGBA(r, green, b, a);
 }
+
 void Color::SetBlue(uint8_t blue)
 {
     uint8_t r;
@@ -49,6 +51,7 @@ void Color::SetBlue(uint8_t blue)
     SDL_GetRGBA(mColor, mFormat, &r, &g, &b, &a);
     SetRGBA(r, g, blue, a);
 }
+
 void Color::SetAlpha(uint8_t alpha)
 {
     uint8_t r;
@@ -70,6 +73,7 @@ uint8_t Color::GetRed() const
     SDL_GetRGBA(mColor, mFormat, &r, &g, &b, &a);
     return r;
 }
+
 uint8_t Color::GetGreen() const
 {
     uint8_t r;
@@ -80,6 +84,7 @@ uint8_t Color::GetGreen() const
     SDL_GetRGBA(mColor, mFormat, &r, &g, &b, &a);
     return g;
 }
+
 uint8_t Color::GetBlue() const
 {
     uint8_t r;
@@ -90,6 +95,7 @@ uint8_t Color::GetBlue() const
     SDL_GetRGBA(mColor, mFormat, &r, &g, &b, &a);
     return b;
 }
+
 uint8_t Color::GetAlpha() const
 {
     uint8_t r;

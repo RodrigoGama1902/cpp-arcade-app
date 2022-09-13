@@ -9,13 +9,13 @@ public:
     static const Vec2D Zero;
 
     Vec2D();
-    Vec2D(float x, float y);
+    Vec2D(float mX, float mY);
     Vec2D(const Vec2D &src);
 
-    float get_x();
-    float get_y();
-    void set_x(float x);
-    void set_y(float y);
+    inline float GetX() const { return mX; }
+    inline float GetY() const { return mY; }
+    inline void SetX(float x) { mX = x; }
+    inline void SetY(float y) { mY = y; }
 
     friend std::ostream &operator<<(std::ostream &ostream_ref, const Vec2D vec);
 
@@ -52,8 +52,8 @@ public:
     friend Vec2D operator*(float scalar, const Vec2D &vec);
 
 private:
-    float x;
-    float y;
+    float mX;
+    float mY;
 };
 
 #endif

@@ -12,17 +12,17 @@ const Vec2D Vec2D::Zero;
 //------------------------------
 
 Vec2D::Vec2D()
-    : x{0}, y{0}
+    : mX{0}, mY{0}
 {
 }
 
-Vec2D::Vec2D(float x, float y)
-    : x{x}, y{y}
+Vec2D::Vec2D(float mX, float mY)
+    : mX{mX}, mY{mY}
 {
 }
 
 Vec2D::Vec2D(const Vec2D &src)
-    : x{src.x}, y{src.y}
+    : mX{src.mX}, mY{src.mY}
 {
     std::cout << "Copy Constructor" << std::endl;
 }
@@ -38,32 +38,8 @@ Vec2D operator*(float scalar, const Vec2D &vec)
 
 std::ostream &operator<<(std::ostream &ostream_ref, const Vec2D vec)
 {
-    ostream_ref << "(" << vec.x << ", " << vec.y << ")" << std::endl;
+    ostream_ref << "(" << vec.mX << ", " << vec.mY << ")" << std::endl;
     return ostream_ref;
-}
-
-//------------------------------
-// Getters/Setters Methods
-//------------------------------
-
-float Vec2D::get_x()
-{
-    return this->x;
-}
-
-float Vec2D::get_y()
-{
-    return this->y;
-}
-
-void Vec2D::set_x(float input_x)
-{
-    this->x = input_x;
-}
-
-void Vec2D::set_y(float input_y)
-{
-    this->y = input_y;
 }
 
 //------------------------------
@@ -115,7 +91,7 @@ float Vec2D::Distance(const Vec2D &vec) const
 
 Vec2D Vec2D::operator-() const
 {
-    return Vec2D(-x, -y);
+    return Vec2D(-mX, -mY);
 }
 
 //------------------------------
@@ -124,7 +100,7 @@ Vec2D Vec2D::operator-() const
 
 bool Vec2D::operator==(const Vec2D &vec2) const
 {
-    return is_equal(x, vec2.x) && is_equal(y, vec2.y);
+    return is_equal(mX, vec2.mX) && is_equal(mY, vec2.mY);
 }
 
 bool Vec2D::operator!=(const Vec2D &vec2) const
@@ -134,23 +110,23 @@ bool Vec2D::operator!=(const Vec2D &vec2) const
 
 Vec2D Vec2D::operator*(float scalar) const
 {
-    return Vec2D(x * scalar, y * scalar);
+    return Vec2D(mX * scalar, mY * scalar);
 }
 
 Vec2D Vec2D::operator/(float scale) const
 {
     assert(fabsf(scale) > EPSILON);
-    return Vec2D(x / scale, y / scale);
+    return Vec2D(mX / scale, mY / scale);
 }
 
 Vec2D Vec2D::operator+(const Vec2D &vec2) const
 {
-    return Vec2D(x + vec2.x, y + vec2.y);
+    return Vec2D(mX + vec2.mX, mY + vec2.mY);
 }
 
 Vec2D Vec2D::operator-(const Vec2D &vec2) const
 {
-    return Vec2D(x - vec2.x, y - vec2.y);
+    return Vec2D(mX - vec2.mX, mY - vec2.mY);
 }
 
 Vec2D &Vec2D::operator*=(float scale)
@@ -180,7 +156,7 @@ Vec2D &Vec2D::operator-=(const Vec2D &vec2)
 
 float Vec2D::Dot(const Vec2D &vec) const
 {
-    return x * vec.x + y * vec.y;
+    return mX * vec.mX + mY * vec.mY;
 }
 
 Vec2D Vec2D::ProjectOnto(const Vec2D &vec2) const
@@ -211,12 +187,12 @@ void Vec2D::Rotate(float angle, const Vec2D &aroundPoint)
     float cosine = cosf(angle);
     float sine = sinf(angle);
 
-    Vec2D thisVec(x, y);
+    Vec2D thisVec(mX, mY);
 
     thisVec -= aroundPoint;
 
-    float xRot = thisVec.x * cosine - thisVec.y * sine;
-    float yRot = thisVec.x * sine + thisVec.y * cosine;
+    float xRot = thisVec.mX * cosine - thisVec.mY * sine;
+    float yRot = thisVec.mX * sine + thisVec.mY * cosine;
 
     Vec2D rot = Vec2D(xRot, yRot);
 
@@ -228,12 +204,12 @@ Vec2D Vec2D::RotationResult(float angle, const Vec2D &aroundPoint) const
     float cosine = cosf(angle);
     float sine = sin(angle);
 
-    Vec2D thisVec(x, y);
+    Vec2D thisVec(mX, mY);
 
     thisVec -= aroundPoint;
 
-    float xRot = thisVec.x * cosine - thisVec.y * sine;
-    float yRot = thisVec.x * sine + thisVec.y * cosine;
+    float xRot = thisVec.mX * cosine - thisVec.mY * sine;
+    float yRot = thisVec.mX * sine + thisVec.mY * cosine;
 
     Vec2D rot = Vec2D(xRot, yRot);
 
