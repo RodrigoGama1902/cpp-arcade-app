@@ -1,4 +1,4 @@
 all:
-	g++ -I include -L lib -o build/main src/main.cpp -lmingw32 -lSDL2main -lSDL2
+	g++ -Wall -std=c++17 -lmingw32 -I include -L lib src/utils/*.cpp src/graphics/*.cpp src/main.cpp -o build/main -lSDL2main -lSDL2
 	copy bin\SDL2.dll build\SDL2.dll
 
