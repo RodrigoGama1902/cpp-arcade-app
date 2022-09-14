@@ -24,7 +24,6 @@ Vec2D::Vec2D(float mX, float mY)
 Vec2D::Vec2D(const Vec2D &src)
     : mX{src.mX}, mY{src.mY}
 {
-    std::cout << "Copy Constructor" << std::endl;
 }
 
 //------------------------------

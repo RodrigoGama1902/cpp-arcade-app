@@ -17,7 +17,7 @@ public:
     ~Screen();
 
     SDL_Window *Init(uint32_t w, uint32_t h, uint32_t mag);
-    void SwapScreen();
+    void SwapScreen(bool update = false);
 
     inline void SetClearColor(const Color &clearColor) { mClearColor = clearColor; }
     inline uint32_t Width() const { return mWidth; }

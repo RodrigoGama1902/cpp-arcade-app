@@ -62,18 +62,19 @@ SDL_Window *Screen::Init(uint32_t w, uint32_t h, uint32_t mag)
     return moptrWindow;
 }
 
-void Screen::SwapScreen()
+void Screen::SwapScreen(bool update)
 {
     assert(moptrWindow);
     if (moptrWindow)
     {
-        ClearScreen();
+        if (!update) // If we don't want to update the screen pixels, just clear it
+            ClearScreen();
 
         SDL_BlitScaled(mBackBuffer.GetSurface(), nullptr, mnoptrWindowSurface, nullptr); // Blit the created screenBuffer pixels to the window surface
+        SDL_UpdateWindowSurface(moptrWindow);                                            // Update the window surface so the changed pixels will be shown
 
-        SDL_UpdateWindowSurface(moptrWindow); // Update the window surface so the changed pixels will be shown
-
-        mBackBuffer.Clear(mClearColor); // Clear the screen buffer
+        if (!update)
+            mBackBuffer.Clear(mClearColor); // Clear the screen buffer
     }
 }
 
@@ -118,24 +119,25 @@ void Screen::Draw(const Line2D &line, const Color &color)
 
         Draw(x0, y0, color);
 
-        if (dx >= dy)
+        if (dx >= dy) // go along x
         {
             int d = dy - dx / 2;
 
-            while (x0 != x1)
+            while (x0 != x1) // keep looping along x until x0 is equal to the x1 (the end point x)
             {
-                if (d >= 0)
+                if (d >= 0) // if d is greater than 0, then we need to move along y (Get to the upper or lower pixel)
                 {
                     d -= dx;
                     y0 += iy;
                 }
+
                 d += dy;
-                x0 += ix;
+                x0 += ix; // move along x
 
                 Draw(x0, y0, color);
             }
         }
-        else
+        else // go along y
         {
             int d = dx - dy / 2;
 
