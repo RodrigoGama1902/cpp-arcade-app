@@ -51,11 +51,15 @@ void App::Run()
     {
 
         // uint32_t SDL_GetMouseState(int *x, int *y);
-
         // Line2D line1(Vec2D(SCREEN_WIDTH, SCREEN_HEIGHT), Vec2D(0, 0));
         // theScreen.Draw(line1, Color::Red());
-
         // theScreen.SwapScreen();
+
+        uint32_t lastTick = SDL_GetTicks();
+        uint32_t currentTick = lastTick;
+
+        uint32_t dt = 10;
+        uint32_t accumulator = 0;
 
         SDL_Event sdlEvent;
 
@@ -64,6 +68,18 @@ void App::Run()
 
         while (running)
         {
+
+            currentTick = SDL_GetTicks();
+            uint32_t frameTime = currentTick - lastTick;
+
+            if (frameTime > 300)
+            {
+                frameTime = 300;
+            }
+
+            lastTick = currentTick;
+            accumulator += frameTime;
+
             while (SDL_PollEvent(&sdlEvent))
             {
 
@@ -92,6 +108,15 @@ void App::Run()
                     break;
                 }
             }
+
+            while (accumulator >= dt)
+            {
+                // Update current scene by dt
+                accumulator -= dt;
+            }
+
+            // Render
+            // mScreen.SwapScreen();
         }
     }
 }
