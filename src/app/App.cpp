@@ -1,7 +1,11 @@
 
 #include "App.h"
 #include "SDL2/SDL.h"
+
 #include "Line2D.h"
+#include "Triangle.h"
+#include "AARectangle.h"
+#include "Circle.h"
 
 App &App::Singleton()
 {
@@ -21,6 +25,9 @@ void App::Run()
     {
 
         Line2D line1(Vec2D(mScreen.Width(), mScreen.Height()), Vec2D(0, 0));
+        Triangle triangle1(Vec2D(0, 0), Vec2D(mScreen.Width(), 0), Vec2D(mScreen.Width() / 2, mScreen.Height()));
+        AARectangle rect1(Vec2D(0, 0), Vec2D(mScreen.Width() / 2, mScreen.Height() / 2));
+        Circle circle1(Vec2D(mScreen.Width() / 2, mScreen.Height() / 2), 50);
 
         uint32_t lastTick = SDL_GetTicks();
         uint32_t currentTick = lastTick;
@@ -64,7 +71,10 @@ void App::Run()
             }
 
             // Render
-            mScreen.Draw(line1, Color::Red());
+            // mScreen.Draw(line1, Color::Red());
+            // mScreen.Draw(triangle1, Color::Red());
+            mScreen.Draw(rect1, Color::Red());
+            mScreen.Draw(circle1, Color::Red());
 
             mScreen.SwapScreen();
         }

@@ -6,6 +6,12 @@
 #include <cassert>
 #include <cmath>
 
+#include "Triangle.h"
+#include "AARectangle.h"
+#include "Circle.h"
+
+#include "Utils.h"
+
 Screen::Screen() : mWidth(0), mHeight(0), moptrWindow(nullptr), mnoptrWindowSurface(nullptr)
 {
 }
@@ -154,6 +160,55 @@ void Screen::Draw(const Line2D &line, const Color &color)
                 Draw(x0, y0, color);
             }
         }
+    }
+}
+
+void Screen::Draw(const Triangle &triangle, const Color &color)
+{
+    Line2D line1(triangle.GetP0(), triangle.GetP1());
+    Line2D line2(triangle.GetP1(), triangle.GetP2());
+    Line2D line3(triangle.GetP2(), triangle.GetP0());
+
+    Draw(line1, color);
+    Draw(line2, color);
+    Draw(line3, color);
+}
+
+void Screen::Draw(const AARectangle &aaRectangle, const Color &color)
+{
+    std::vector<Vec2D> points = aaRectangle.GetPoints();
+
+    Line2D line1(points[0], points[1]);
+    Line2D line2(points[1], points[2]);
+    Line2D line3(points[2], points[3]);
+    Line2D line4(points[3], points[0]);
+
+    Draw(line1, color);
+    Draw(line2, color);
+    Draw(line3, color);
+    Draw(line4, color);
+}
+
+void Screen::Draw(const Circle &circle, const Color &color)
+{
+
+    static unsigned int NUM_CIRCLE_SEGMENTS = 32;
+
+    float angle = TWO_PI / float(NUM_CIRCLE_SEGMENTS);
+
+    Vec2D p0 = Vec2D(circle.GetCenterPoint().GetX() + circle.GetRadius(), circle.GetCenterPoint().GetY());
+    Vec2D p1 = p0;
+
+    Line2D nextLineToDraw;
+
+    for (unsigned int i = 0; i < NUM_CIRCLE_SEGMENTS; i++)
+    {
+        p1.Rotate(angle, circle.GetCenterPoint());
+        nextLineToDraw.SetP0(p0);
+        nextLineToDraw.SetP1(p1);
+
+        Draw(nextLineToDraw, color);
+        p0 = p1;
     }
 }
 
