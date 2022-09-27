@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cassert>
 #include <cmath>
+#include <algorithm>
 
 #include "Triangle.h"
 #include "AARectangle.h"
@@ -163,8 +164,13 @@ void Screen::Draw(const Line2D &line, const Color &color)
     }
 }
 
-void Screen::Draw(const Triangle &triangle, const Color &color)
+void Screen::Draw(const Triangle &triangle, const Color &color, bool fill, const Color &fillColor)
 {
+    if (fill)
+    {
+        FillPoly(triangle.GetPoints(), fillColor);
+    }
+
     Line2D line1(triangle.GetP0(), triangle.GetP1());
     Line2D line2(triangle.GetP1(), triangle.GetP2());
     Line2D line3(triangle.GetP2(), triangle.GetP0());
@@ -174,8 +180,13 @@ void Screen::Draw(const Triangle &triangle, const Color &color)
     Draw(line3, color);
 }
 
-void Screen::Draw(const AARectangle &aaRectangle, const Color &color)
+void Screen::Draw(const AARectangle &aaRectangle, const Color &color, bool fill, const Color &fillColor)
 {
+    if (fill)
+    {
+        FillPoly(aaRectangle.GetPoints(), fillColor);
+    }
+
     std::vector<Vec2D> points = aaRectangle.GetPoints();
 
     Line2D line1(points[0], points[1]);
@@ -189,10 +200,12 @@ void Screen::Draw(const AARectangle &aaRectangle, const Color &color)
     Draw(line4, color);
 }
 
-void Screen::Draw(const Circle &circle, const Color &color)
+void Screen::Draw(const Circle &circle, const Color &color, bool fill, const Color &fillColor)
 {
-
     static unsigned int NUM_CIRCLE_SEGMENTS = 32;
+
+    std::vector<Vec2D> circlePoints;
+    std::vector<Line2D> lines;
 
     float angle = TWO_PI / float(NUM_CIRCLE_SEGMENTS);
 
@@ -207,8 +220,19 @@ void Screen::Draw(const Circle &circle, const Color &color)
         nextLineToDraw.SetP0(p0);
         nextLineToDraw.SetP1(p1);
 
-        Draw(nextLineToDraw, color);
+        lines.push_back(nextLineToDraw);
         p0 = p1;
+        circlePoints.push_back(p0);
+    }
+
+    if (fill)
+    {
+        FillPoly(circlePoints, fillColor);
+    }
+
+    for (const Line2D &line : lines)
+    {
+        Draw(line, color);
     }
 }
 
@@ -218,5 +242,90 @@ void Screen::ClearScreen()
     if (moptrWindow)
     {
         SDL_FillRect(mnoptrWindowSurface, nullptr, mClearColor.GetPixelColor()); // Fill the window surface with the clear color
+    }
+}
+
+void Screen::FillPoly(const std::vector<Vec2D> &points, const Color &color)
+{
+    if (points.size() > 0)
+    {
+        float top = points[0].GetY();
+        float bottom = points[0].GetY();
+        float left = points[0].GetX();
+        float right = points[0].GetX();
+
+        for (size_t i = 1; i < points.size(); i++)
+        {
+            if (points[i].GetY() < top)
+            {
+                top = points[i].GetY();
+            }
+            if (points[i].GetY() > bottom)
+            {
+                bottom = points[i].GetY();
+            }
+            if (points[i].GetX() < left)
+            {
+                left = points[i].GetX();
+            }
+            if (points[i].GetX() > right)
+            {
+                right = points[i].GetX();
+            }
+        }
+
+        for (int pixelY = top; pixelY < bottom; pixelY++)
+        {
+            std::vector<float> nodeXVec;
+
+            size_t j = points.size() - 1;
+
+            for (size_t i = 0; i < points.size(); i++)
+            {
+                float pointIY = points[i].GetY();
+                float pointJY = points[j].GetY();
+
+                if ((pointIY <= (float)pixelY && pointJY > (float)pixelY) || (pointJY <= (float)pixelY && pointIY > (float)pixelY))
+                {
+                    float denom = pointJY - pointIY;
+                    if (is_equal(denom, 0.0f))
+                    {
+                        continue;
+                    }
+
+                    float x = points[i].GetX() + ((float)pixelY - pointIY) / denom * (points[j].GetX() - points[i].GetX());
+                    nodeXVec.push_back(x);
+                }
+
+                j = i;
+            }
+
+            std::sort(nodeXVec.begin(), nodeXVec.end(), std::less<float>());
+
+            for (size_t i = 0; i < nodeXVec.size(); i += 2)
+            {
+                if (nodeXVec[i] > right)
+                {
+                    break;
+                }
+
+                if (nodeXVec[i + 1] > left)
+                {
+                    if (nodeXVec[i] < left)
+                    {
+                        nodeXVec[i] = left;
+                    }
+                    if (nodeXVec[i + 1] > right)
+                    {
+                        nodeXVec[i + 1] = right;
+                    }
+
+                    for (int pixelX = nodeXVec[i]; pixelX < nodeXVec[i + 1]; pixelX++)
+                    {
+                        Draw(pixelX, pixelY, color);
+                    }
+                }
+            }
+        }
     }
 }

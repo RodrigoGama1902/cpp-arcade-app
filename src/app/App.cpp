@@ -73,7 +73,7 @@ void App::Run()
             // Render
             // mScreen.Draw(line1, Color::Red());
             // mScreen.Draw(triangle1, Color::Red());
-            mScreen.Draw(rect1, Color::Red());
+            mScreen.Draw(rect1, Color::Red(), true, Color::Green());
             mScreen.Draw(circle1, Color::Red());
 
             mScreen.SwapScreen();
